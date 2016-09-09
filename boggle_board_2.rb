@@ -40,16 +40,16 @@ class BoggleBoard
         end
     }    
 
-    # @board = Array.new(4) {
-    #  temp_board.shift(4).join
-    # }
+     # @board = Array.new(4) {
+     #  temp_board.shift(4).join
+     # }
 
-    @board = [
-              %w(A W D E),
-              %w(S B C F),
-              %w(M O Z P),
-              %w(N G K P)
-          ]
+     @board = [
+               %w(A W D E),
+               %w(S B C F),
+               %w(M O Z P),
+               %w(N G K P)
+           ]
   end
 
   def to_s
@@ -92,9 +92,23 @@ class BoggleBoard
             rw = row_index
             cl = col_index
             letters.each do |x|
-              is_correct = check_next_letter(x,rw,cl)
-              p is_correct
-            end
+              if final_word.length == word.length
+                if final_word == word.upcase                
+                   return final_word
+                end
+              else
+                is_correct = check_next_letter(x,rw,cl)
+                if is_correct == false
+                  return false
+                else
+                  #returning coordinates
+                  #byebug
+                    final_word = final_word + x
+                    rw = is_correct[0]
+                    cl = is_correct[1]
+                end
+              end
+            end  
           end
         end
       end
@@ -105,31 +119,51 @@ class BoggleBoard
   end
 
   def check_next_letter(letter,row_index,col_index)
-      byebug
+      #byebug
+
       if @board[row_index][col_index + 1] == letter
         #move to right 
-         return true
-      elsif @board[row_index][col_index - 1] == letter 
+        col_index = col_index + 1
+        return [row_index,col_index]
+
+      elsif @board[row_index][col_index - 1] == letter
           #move to left
-          return true
+          col_index = col_index - 1
+          return [row_index,col_index]
+
       elsif @board[row_index-1][col_index] == letter
           #move up
-          return true
-      elsif @board[row_index+1][col_index] == letter 
+          row_index = row_index - 1
+          return [row_index,col_index]
+
+      elsif @board[row_index+1][col_index] == letter
           #move down 
-          return true 
-      elsif @board[row_index+1][col_index+1] == letter  
+          row_index = row_index + 1
+          return [row_index,col_index]
+
+      elsif @board[row_index+1][col_index+1] == letter 
           #move bottom right
-          return true
-      elsif @board[row_index-1][col_index+1] == letter
+          row_index = row_index + 1
+          col_index = col_index + 1
+          return [row_index,col_index]
+
+      elsif @board[row_index-1][col_index+1] == letter 
           #move top right
-          return true
-      elsif @board[row_index+1][col_index-1] == letter
+          row_index = row_index - 1
+          col_index = col_index + 1
+          return [row_index,col_index]
+
+      elsif @board[row_index+1][col_index-1] == letter   
           #move bottom left
-          return true
-      elsif @board[row_index-1][col_index-1] == letter 
+          row_index = row_index + 1
+          col_index = col_index - 1
+          return [row_index,col_index]
+
+      elsif @board[row_index-1][col_index-1] == letter  
           #move top left
-          return true
+          row_index = row_index - 1
+          col_index = col_index - 1
+          return [row_index,col_index]
       else
         return false
       end
