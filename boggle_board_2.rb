@@ -3,6 +3,9 @@ require 'byebug'
 class BoggleBoard
   def initialize
       @board = []
+      @global_row_index = 0
+      @global_col_index = 0
+      @length = 0
   end
 
   def shake!
@@ -36,7 +39,6 @@ class BoggleBoard
           temp_board << letter.ljust(2)
         end
     }    
-       # @dice = @dice.delete(die)
 
     # @board = Array.new(4) {
     #  temp_board.shift(4).join
@@ -44,20 +46,12 @@ class BoggleBoard
 
     @board = [
               %w(A W D E),
-              %w(B O J O),
-              %w(C R O P),
-              %w(F D K P)
+              %w(S B C F),
+              %w(M O Z P),
+              %w(N G K P)
           ]
   end
-  # Defining to_s on an object controls how the object is
-  # represented as a string, e.g., when you pass it to puts
-  #
-  # Override this to print out a sensible board format so
-  # you can write code like:
-  #
-  # board = BoggleBoard.new
-  # board.shake!
-  # puts board
+
   def to_s
     if @board == []
       "----\n----\n----\n----"
@@ -68,26 +62,84 @@ class BoggleBoard
 
   def include?(word)
     #check word length
-    characters = word.length
-    letters = word.chars
+    @length = word.length
+    final_word = ""
+    is_word = false
+    is_correct = false
 
-      #p @board.class
-      @board.each do |x|
+    if @length < 3
+      return false
+    else
+      letters = word.upcase.chars #Putting the letters into an array
 
-        x.each_with_index {|val,index|
-         #byebug
-          if val.upcase == letters[0].upcase #first character
-            p index + x
+      #Board Finding the value
+      @board.each_with_index do |row_value, row_index|
+        row_value.each_with_index do |col_value, col_index|
+
+          @row_value = row_value
+
+          #If First letter is in the bogle
+          if is_word == false
+            if col_value == letters[0]
+              final_word = final_word + letters[0]
+              letters.shift(1)
+              is_word = true #found letter
+            end
           end
-        }
+
+          #Find next characters
+          if is_word == true
+            rw = row_index
+            cl = col_index
+            letters.each do |x|
+              is_correct = check_next_letter(x,rw,cl)
+              p is_correct
+            end
+          end
+        end
+      end
+      return false
+      #End Board Finding the value
+    end
+    return "Nothing happened"
+  end
+
+  def check_next_letter(letter,row_index,col_index)
+      byebug
+      if @board[row_index][col_index + 1] == letter
+        #move to right 
+         return true
+      elsif @board[row_index][col_index - 1] == letter 
+          #move to left
+          return true
+      elsif @board[row_index-1][col_index] == letter
+          #move up
+          return true
+      elsif @board[row_index+1][col_index] == letter 
+          #move down 
+          return true 
+      elsif @board[row_index+1][col_index+1] == letter  
+          #move bottom right
+          return true
+      elsif @board[row_index-1][col_index+1] == letter
+          #move top right
+          return true
+      elsif @board[row_index+1][col_index-1] == letter
+          #move bottom left
+          return true
+      elsif @board[row_index-1][col_index-1] == letter 
+          #move top left
+          return true
+      else
+        return false
       end
   end
 end
 
 board = BoggleBoard.new
 board.shake!
-#puts board
-board.include?("word")
+puts board
+p board.include?(gets.chomp.to_s)
 
 
 
