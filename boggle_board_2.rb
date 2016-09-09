@@ -34,22 +34,22 @@ class BoggleBoard
 
         letter = x.sample(1)[0]
         if letter == "Q"
-          temp_board << "Qu".ljust(3)
+          temp_board << "Q"
         else
-          temp_board << letter.ljust(2)
+          temp_board << letter
         end
     }    
 
-     # @board = Array.new(4) {
-     #  temp_board.shift(4).join
-     # }
+      @board = Array.new(4) {
+       temp_board.shift(4)
+      }
 
-     @board = [
-               %w(A W D E),
-               %w(S B C F),
-               %w(M O Z P),
-               %w(N G K P)
-           ]
+     # @board = [
+     #           %w(A W D E),
+     #           %w(S B C F),
+     #           %w(M O Z P),
+     #           %w(N G K P)
+     #       ]
   end
 
   def to_s
